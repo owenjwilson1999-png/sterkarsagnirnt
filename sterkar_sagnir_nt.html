@@ -2,16 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Icelandic Verb Quiz</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    table { border-collapse: collapse; margin-bottom: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    table { border-collapse: collapse; margin-bottom: 20px; width: 100%; }
     td, th { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    input { width: 100px; padding: 5px; }
+    input {
+      width: 100%;
+      padding: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
     .correct { background-color: #c8f7c5; }
     .incorrect { background-color: #f7c5c5; }
     .show { background-color: #e0e0ff; }
-    button { margin: 10px 5px 0 0; padding: 8px 12px; }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    button {
+      padding: 12px 20px;
+      min-height: 44px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      tr {
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 8px;
+      }
+      td {
+        border: none;
+        padding: 4px 0;
+        text-align: left;
+      }
+      td:first-child {
+        font-weight: bold;
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 4px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -21,6 +65,16 @@
 
 <script>
 const verbs = [
+  { name: "að fara", forms: ["fer", "ferð", "fer", "förum", "farið", "fara"] },
+  { name: "að koma", forms: ["kem", "kemur", "kemur", "komum", "komið", "koma"] },
+  { name: "að sjá", forms: ["sé", "sérð", "sér", "sjáum", "sjáið", "sjá"] },
+  { name: "að taka", forms: ["tek", "tekur", "tekur", "tökum", "takið", "taka"] },
+  { name: "að gefa", forms: ["gef", "gefur", "gefur", "gefum", "gefið", "gefa"] },
+  { name: "að fá", forms: ["fæ", "færð", "fær", "fáum", "fáið", "fá"] },
+  { name: "að sitja", forms: ["sit", "situr", "situr", "sitjum", "sitjið", "sitja"] },
+  { name: "að standa", forms: ["stend", "stendur", "stendur", "stöndum", "standið", "standa"] },
+  { name: "að liggja", forms: ["ligg", "liggur", "liggur", "liggjum", "liggið", "liggja"] },
+  { name: "að ganga", forms: ["geng", "gengur", "gengur", "göngum", "gangið", "ganga"] },
   { name: "að hlaupa", forms: ["hleyp", "hleypur", "hleypur", "hlaupum", "hlaupið", "hlaupa"] },
   { name: "að drekka", forms: ["drekk", "drekkur", "drekkur", "drekkum", "drekkið", "drekka"] },
   { name: "að vinna", forms: ["vinn", "vinnur", "vinnur", "vinnum", "vinnið", "vinna"] },
@@ -71,7 +125,7 @@ function renderVerb() {
   const verb = verbs[currentIndex];
   let html = `<h2>Sögn: ${verb.name} (${currentIndex + 1} / ${verbs.length})</h2>`;
   html += `<table>`;
-  html += `<tr><th>Persóna</th><th>Nútíð</th></tr>`;
+  html += `<thead><tr><th>Persóna</th><th>Nútíð</th></tr></thead><tbody>`;
 
   persons.forEach((p, i) => {
     html += `
@@ -82,22 +136,22 @@ function renderVerb() {
     `;
   });
 
-  html += `</table>`;
+  html += `</tbody></table>`;
+  html += `<div class="button-row">`;
   html += `<button onclick="checkAnswers()">Check Answers</button>`;
   html += `<button onclick="showAnswers()">Show Correct Answers</button>`;
   html += `<button onclick="prevVerb()">Back</button>`;
   html += `<button onclick="nextVerb()">Next</button>`;
+  html += `</div>`;
 
   document.getElementById("app").innerHTML = html;
 }
 
 function checkAnswers() {
   const verb = verbs[currentIndex];
-
   verb.forms.forEach((correct, i) => {
     const input = document.getElementById(`input_${i}`);
     const userAnswer = input.value.trim().toLowerCase();
-
     if (userAnswer === correct.toLowerCase()) {
       input.classList.remove("incorrect");
       input.classList.add("correct");
@@ -110,7 +164,6 @@ function checkAnswers() {
 
 function showAnswers() {
   const verb = verbs[currentIndex];
-
   verb.forms.forEach((correct, i) => {
     const input = document.getElementById(`input_${i}`);
     input.value = correct;
@@ -120,18 +173,12 @@ function showAnswers() {
 }
 
 function nextVerb() {
-  currentIndex++;
-  if (currentIndex >= verbs.length) {
-    currentIndex = 0;
-  }
+  currentIndex = (currentIndex + 1) % verbs.length;
   renderVerb();
 }
 
 function prevVerb() {
-  currentIndex--;
-  if (currentIndex < 0) {
-    currentIndex = verbs.length - 1;
-  }
+  currentIndex = (currentIndex - 1 + verbs.length) % verbs.length;
   renderVerb();
 }
 
