@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Icelandic Verb Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { border-collapse: collapse; margin-bottom: 20px; }
+    td, th { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    input { width: 100px; padding: 5px; }
+    .correct { background-color: #c8f7c5; }
+    .incorrect { background-color: #f7c5c5; }
+    .show { background-color: #e0e0ff; }
+    button { margin: 10px 5px 0 0; padding: 8px 12px; }
+  </style>
+</head>
+<body>
+
+<h1>Sterkar Sagnir (nútíð)</h1>
+<div id="app"></div>
+
+<script>
+const verbs = [
+  { name: "að hlaupa", forms: ["hleyp", "hleypur", "hleypur", "hlaupum", "hlaupið", "hlaupa"] },
+  { name: "að drekka", forms: ["drekk", "drekkur", "drekkur", "drekkum", "drekkið", "drekka"] },
+  { name: "að vinna", forms: ["vinn", "vinnur", "vinnur", "vinnum", "vinnið", "vinna"] },
+  { name: "að halda", forms: ["held", "heldur", "heldur", "höldum", "haldið", "halda"] },
+  { name: "að finna", forms: ["finn", "finnur", "finnur", "finnum", "finnið", "finna"] },
+  { name: "að láta", forms: ["læt", "lætur", "lætur", "látum", "látið", "láta"] },
+  { name: "að verða", forms: ["verð", "verður", "verður", "verðum", "verðið", "verða"] },
+  { name: "að lesa", forms: ["les", "lest", "les", "lesum", "lesið", "lesa"] },
+  { name: "að líða", forms: ["líð", "líður", "líður", "líðum", "líðið", "líða"] },
+  { name: "að búa", forms: ["bý", "býrð", "býr", "búum", "búið", "búa"] },
+  { name: "að aka", forms: ["ek", "ekur", "ekur", "ökum", "akið", "aka"] },
+  { name: "að draga", forms: ["dreg", "dregur", "dregur", "drögum", "dragið", "draga"] },
+  { name: "að bera", forms: ["ber", "berð", "ber", "berum", "berið", "bera"] },
+  { name: "að skera", forms: ["sker", "skerð", "sker", "skerum", "skerið", "skera"] },
+  { name: "að slá", forms: ["slæ", "slærð", "slær", "sláum", "sláið", "slá"] },
+  { name: "að syngja", forms: ["syng", "syngur", "syngur", "syngjum", "syngið", "syngja"] },
+  { name: "að hlæja", forms: ["hlæ", "hlærð", "hlær", "hlæjum", "hlæið", "hlæja"] },
+  { name: "að gráta", forms: ["græt", "grætur", "grætur", "grátum", "grátið", "gráta"] },
+  { name: "að bíða", forms: ["bíð", "bíður", "bíður", "bíðum", "bíðið", "bíða"] },
+  { name: "að bjóða", forms: ["býð", "býður", "býður", "bjóðum", "bjóðið", "bjóða"] },
+  { name: "að kjósa", forms: ["kýs", "kýst", "kýs", "kjósum", "kjósið", "kjósa"] },
+  { name: "að njóta", forms: ["nýt", "nýtur", "nýtur", "njótum", "njótið", "njóta"] },
+  { name: "að ljúga", forms: ["lýg", "lýgur", "lýgur", "ljúgum", "ljúgið", "ljúga"] },
+  { name: "að ljúka", forms: ["lýk", "lýkur", "lýkur", "ljúkum", "ljúkið", "ljúka"] },
+  { name: "að biðja", forms: ["bið", "biður", "biður", "biðjum", "biðjið", "biðja"] },
+  { name: "að stökkva", forms: ["stekk", "stekkur", "stekkur", "stökkvum", "stökkvið", "stökkva"] },
+  { name: "að brjóta", forms: ["brýt", "brýtur", "brýtur", "brjótum", "brjótið", "brjóta"] },
+  { name: "að fljúga", forms: ["flýg", "flýgur", "flýgur", "fljúgum", "fljúgið", "fljúga"] },
+  { name: "að sjóða", forms: ["sýð", "sýður", "sýður", "sjóðum", "sjóðið", "sjóða"] },
+  { name: "að skjóta", forms: ["skýt", "skýtur", "skýtur", "skjótum", "skjótið", "skjóta"] },
+  { name: "að frjósa", forms: ["frýs", "frýst", "frýs", "frjósum", "frjósið", "frjósa"] },
+  { name: "að leika", forms: ["leik", "leikur", "leikur", "leikum", "leikið", "leika"] },
+  { name: "að drepa", forms: ["drep", "drepur", "drepur", "drepum", "drepið", "drepa"] },
+  { name: "að stela", forms: ["stel", "stelur", "stelur", "stelum", "stelið", "stela"] },
+  { name: "að sofa", forms: ["sef", "sefur", "sefur", "sofum", "sofið", "sofa"] }
+];
+
+const persons = ["ég", "þú", "hann/hún/það", "við", "þið", "þeir/þær/þau"];
+
+let currentIndex = 0;
+
+for (let i = verbs.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [verbs[i], verbs[j]] = [verbs[j], verbs[i]];
+}
+
+function renderVerb() {
+  const verb = verbs[currentIndex];
+  let html = `<h2>Sögn: ${verb.name} (${currentIndex + 1} / ${verbs.length})</h2>`;
+  html += `<table>`;
+  html += `<tr><th>Persóna</th><th>Nútíð</th></tr>`;
+
+  persons.forEach((p, i) => {
+    html += `
+      <tr>
+        <td>${p}</td>
+        <td><input id="input_${i}"></td>
+      </tr>
+    `;
+  });
+
+  html += `</table>`;
+  html += `<button onclick="checkAnswers()">Check Answers</button>`;
+  html += `<button onclick="showAnswers()">Show Correct Answers</button>`;
+  html += `<button onclick="prevVerb()">Back</button>`;
+  html += `<button onclick="nextVerb()">Next</button>`;
+
+  document.getElementById("app").innerHTML = html;
+}
+
+function checkAnswers() {
+  const verb = verbs[currentIndex];
+
+  verb.forms.forEach((correct, i) => {
+    const input = document.getElementById(`input_${i}`);
+    const userAnswer = input.value.trim().toLowerCase();
+
+    if (userAnswer === correct.toLowerCase()) {
+      input.classList.remove("incorrect");
+      input.classList.add("correct");
+    } else {
+      input.classList.remove("correct");
+      input.classList.add("incorrect");
+    }
+  });
+}
+
+function showAnswers() {
+  const verb = verbs[currentIndex];
+
+  verb.forms.forEach((correct, i) => {
+    const input = document.getElementById(`input_${i}`);
+    input.value = correct;
+    input.classList.remove("correct", "incorrect");
+    input.classList.add("show");
+  });
+}
+
+function nextVerb() {
+  currentIndex++;
+  if (currentIndex >= verbs.length) {
+    currentIndex = 0;
+  }
+  renderVerb();
+}
+
+function prevVerb() {
+  currentIndex--;
+  if (currentIndex < 0) {
+    currentIndex = verbs.length - 1;
+  }
+  renderVerb();
+}
+
+renderVerb();
+</script>
+
+</body>
+</html>
