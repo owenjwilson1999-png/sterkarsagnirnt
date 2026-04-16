@@ -9,20 +9,17 @@
   body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background: #f3f4f6;
+    background: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
   }
 
-  .card {
-    background: white;
+  /* no card box anymore */
+  .container {
     width: 95%;
     max-width: 420px;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     text-align: center;
   }
 
@@ -43,20 +40,20 @@
     cursor: pointer;
   }
 
-.home-btn {
-  display: inline-block;
-  margin-bottom: 20px;
-  text-decoration: none;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #f9f9f9;
-  box-sizing: border-box;
-}
+  .home-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f9f9f9;
+    box-sizing: border-box;
+  }
 
-.home-btn:hover {
-  background-color: #f0f0f0;
-}
+  .home-btn:hover {
+    background-color: #f0f0f0;
+  }
 
   .buttons {
     display: flex;
@@ -85,51 +82,61 @@
   .f { background: #ec4899; }
   .n { background: #166534; }
 
-  /* 💚 neon correct */
   .correct { background: #39ff14 !important; }
-
-  /* 🟥 darker wrong */
   .wrong { background: #ff1744 !important; }
 
   .nav {
     display: flex;
     justify-content: space-between;
     margin-top: 15px;
+    gap: 10px;
   }
 
+  /* match home button exactly */
   .nav button {
     flex: 1;
-    margin: 5px;
-    background: #6b7280;
-    color: white;
-    border: none;
-    border-radius: 10px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f9f9f9;
+    box-sizing: border-box;
+    padding: 12px 20px;
+    min-height: 44px;
+    font-size: 16px;
+    cursor: pointer;
   }
+
+  .nav button:hover {
+    background-color: #f0f0f0;
+  }
+
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<div class="container">
 
 <a href="https://owenjwilson.github.io/aefingar/home.html" class="home-btn">
   &#8592; Heim
 </a>
 
-  <h1>Kyn nafnorða</h1>
+<h1>Kyn nafnorða</h1>
 
-  <div class="word" id="word"></div>
+<div class="word" id="word"></div>
 
-  <div class="buttons">
-    <button class="option m" id="mBtn"></button>
-    <button class="option f" id="fBtn"></button>
-    <button class="option n" id="nBtn"></button>
-  </div>
+<div class="buttons">
+  <button class="option m" id="mBtn"></button>
+  <button class="option f" id="fBtn"></button>
+  <button class="option n" id="nBtn"></button>
+</div>
 
-  <div class="nav">
-    <button onclick="back()">← Til baka</button>
-    <button onclick="next()">Áfram →</button>
-  </div>
+<div class="nav">
+  <button onclick="back()">← Til baka</button>
+  <button onclick="next()">Áfram →</button>
+</div>
+
 </div>
 
 <script>
@@ -147,134 +154,133 @@ const WORDS = [
   { is: "afrit", gender: "n", en: "copy" },
   { is: "áhugi", gender: "m", en: "interest" },
   { is: "nemandi", gender: "m", en: "student" },
-{ is: "kennari", gender: "m", en: "teacher" },
-{ is: "læknir", gender: "m", en: "doctor" },
-{ is: "hjúkrunarfræðingur", gender: "m", en: "nurse" },
-{ is: "lögreglumaður", gender: "m", en: "police officer" },
-{ is: "verkfræðingur", gender: "m", en: "engineer" },
-{ is: "smiður", gender: "m", en: "carpenter" },
-{ is: "rafvirki", gender: "m", en: "electrician" },
-{ is: "þjónn", gender: "m", en: "waiter" },
-{ is: "bílstjóri", gender: "m", en: "driver" },
-{ is: "bóndi", gender: "m", en: "farmer" },
-{ is: "kokkur", gender: "m", en: "chef" },
-{ is: "bílvélavirki", gender: "m", en: "mechanic" },
+  { is: "kennari", gender: "m", en: "teacher" },
+  { is: "læknir", gender: "m", en: "doctor" },
+  { is: "hjúkrunarfræðingur", gender: "m", en: "nurse" },
+  { is: "lögreglumaður", gender: "m", en: "police officer" },
+  { is: "verkfræðingur", gender: "m", en: "engineer" },
+  { is: "smiður", gender: "m", en: "carpenter" },
+  { is: "rafvirki", gender: "m", en: "electrician" },
+  { is: "þjónn", gender: "m", en: "waiter" },
+  { is: "bílstjóri", gender: "m", en: "driver" },
+  { is: "bóndi", gender: "m", en: "farmer" },
+  { is: "kokkur", gender: "m", en: "chef" },
+  { is: "bílvélavirki", gender: "m", en: "mechanic" },
 
-{ is: "hús", gender: "n", en: "house" },
-{ is: "forstofa", gender: "f", en: "entryway" },
-{ is: "geymsla", gender: "f", en: "storage room" },
-{ is: "gangur", gender: "m", en: "hallway" },
-{ is: "stofa", gender: "f", en: "living room" },
-{ is: "eldhús", gender: "n", en: "kitchen" },
-{ is: "svefnherbergi", gender: "n", en: "bedroom" },
-{ is: "skrifstofa", gender: "f", en: "office" },
-{ is: "baðherbergi", gender: "n", en: "bathroom" },
-{ is: "klósett", gender: "n", en: "toilet" },
+  { is: "hús", gender: "n", en: "house" },
+  { is: "forstofa", gender: "f", en: "entryway" },
+  { is: "geymsla", gender: "f", en: "storage room" },
+  { is: "gangur", gender: "m", en: "hallway" },
+  { is: "stofa", gender: "f", en: "living room" },
+  { is: "eldhús", gender: "n", en: "kitchen" },
+  { is: "svefnherbergi", gender: "n", en: "bedroom" },
+  { is: "skrifstofa", gender: "f", en: "office" },
+  { is: "baðherbergi", gender: "n", en: "bathroom" },
+  { is: "klósett", gender: "n", en: "toilet" },
 
-{ is: "afsláttur", gender: "m", en: "discount" },
-{ is: "karfa", gender: "f", en: "basket" },
-{ is: "kerra", gender: "f", en: "cart" },
-{ is: "matur", gender: "m", en: "food" },
-{ is: "fiskur", gender: "m", en: "fish" },
-{ is: "kjöt", gender: "n", en: "meat" },
-{ is: "grænmeti", gender: "n", en: "vegetables" },
-{ is: "ávöxtur", gender: "m", en: "fruit" },
-{ is: "mjólkurvara", gender: "f", en: "dairy product" },
-{ is: "nammi", gender: "n", en: "candy" },
+  { is: "afsláttur", gender: "m", en: "discount" },
+  { is: "karfa", gender: "f", en: "basket" },
+  { is: "kerra", gender: "f", en: "cart" },
+  { is: "matur", gender: "m", en: "food" },
+  { is: "fiskur", gender: "m", en: "fish" },
+  { is: "kjöt", gender: "n", en: "meat" },
+  { is: "grænmeti", gender: "n", en: "vegetables" },
+  { is: "ávöxtur", gender: "m", en: "fruit" },
+  { is: "mjólkurvara", gender: "f", en: "dairy product" },
+  { is: "nammi", gender: "n", en: "candy" },
 
-{ is: "epli", gender: "n", en: "apple" },
-{ is: "banani", gender: "m", en: "banana" },
-{ is: "pera", gender: "f", en: "pear" },
-{ is: "appelsína", gender: "f", en: "orange" },
-{ is: "vínber", gender: "n", en: "grapes" },
-{ is: "jarðarber", gender: "n", en: "strawberry" },
-{ is: "sítróna", gender: "f", en: "lemon" },
+  { is: "epli", gender: "n", en: "apple" },
+  { is: "banani", gender: "m", en: "banana" },
+  { is: "pera", gender: "f", en: "pear" },
+  { is: "appelsína", gender: "f", en: "orange" },
+  { is: "vínber", gender: "n", en: "grapes" },
+  { is: "jarðarber", gender: "n", en: "strawberry" },
+  { is: "sítróna", gender: "f", en: "lemon" },
 
-{ is: "kartafla", gender: "f", en: "potato" },
-{ is: "laukur", gender: "m", en: "onion" },
-{ is: "gulrót", gender: "f", en: "carrot" },
-{ is: "baun", gender: "f", en: "bean" },
-{ is: "papríka", gender: "f", en: "bell pepper" },
-{ is: "gúrka", gender: "f", en: "cucumber" },
-{ is: "tómatur", gender: "m", en: "tomato" },
+  { is: "kartafla", gender: "f", en: "potato" },
+  { is: "laukur", gender: "m", en: "onion" },
+  { is: "gulrót", gender: "f", en: "carrot" },
+  { is: "baun", gender: "f", en: "bean" },
+  { is: "papríka", gender: "f", en: "bell pepper" },
+  { is: "gúrka", gender: "f", en: "cucumber" },
+  { is: "tómatur", gender: "m", en: "tomato" },
 
-{ is: "mjólk", gender: "f", en: "milk" },
-{ is: "jógúrt", gender: "n", en: "yogurt" },
-{ is: "ostur", gender: "m", en: "cheese" },
-{ is: "smjör", gender: "n", en: "butter" },
-{ is: "rjómi", gender: "m", en: "cream" },
-{ is: "ís", gender: "m", en: "ice cream" },
-{ is: "íspinni", gender: "m", en: "popsicle" },
+  { is: "mjólk", gender: "f", en: "milk" },
+  { is: "jógúrt", gender: "n", en: "yogurt" },
+  { is: "ostur", gender: "m", en: "cheese" },
+  { is: "smjör", gender: "n", en: "butter" },
+  { is: "rjómi", gender: "m", en: "cream" },
+  { is: "ís", gender: "m", en: "ice cream" },
+  { is: "íspinni", gender: "m", en: "popsicle" },
 
-{ is: "brauð", gender: "n", en: "bread" },
-{ is: "kex", gender: "n", en: "biscuits" },
-{ is: "hafragrautur", gender: "m", en: "porridge" },
-{ is: "hrísgrjón", gender: "n", en: "rice" },
-{ is: "pasta", gender: "n", en: "pasta" },
-{ is: "hveiti", gender: "n", en: "flour" },
-{ is: "olía", gender: "f", en: "oil" },
-{ is: "edik", gender: "n", en: "vinegar" },
-{ is: "sinnep", gender: "n", en: "mustard" },
-{ is: "salt", gender: "n", en: "salt" },
-{ is: "pipar", gender: "m", en: "pepper" },
+  { is: "brauð", gender: "n", en: "bread" },
+  { is: "kex", gender: "n", en: "biscuits" },
+  { is: "hafragrautur", gender: "m", en: "porridge" },
+  { is: "hrísgrjón", gender: "n", en: "rice" },
+  { is: "pasta", gender: "n", en: "pasta" },
+  { is: "hveiti", gender: "n", en: "flour" },
+  { is: "olía", gender: "f", en: "oil" },
+  { is: "edik", gender: "n", en: "vinegar" },
+  { is: "sinnep", gender: "n", en: "mustard" },
+  { is: "salt", gender: "n", en: "salt" },
+  { is: "pipar", gender: "m", en: "pepper" },
 
-{ is: "sápa", gender: "f", en: "soap" },
-{ is: "ruslapoki", gender: "m", en: "trash bag" },
-{ is: "klósettpappír", gender: "m", en: "toilet paper" },
+  { is: "sápa", gender: "f", en: "soap" },
+  { is: "ruslapoki", gender: "m", en: "trash bag" },
+  { is: "klósettpappír", gender: "m", en: "toilet paper" },
 
-{ is: "drykkur", gender: "m", en: "drink" },
-{ is: "súpa", gender: "f", en: "soup" },
-{ is: "samloka", gender: "f", en: "sandwich" },
-{ is: "pylsa", gender: "f", en: "hot dog" },
-{ is: "egg", gender: "n", en: "egg" },
+  { is: "drykkur", gender: "m", en: "drink" },
+  { is: "súpa", gender: "f", en: "soup" },
+  { is: "samloka", gender: "f", en: "sandwich" },
+  { is: "pylsa", gender: "f", en: "hot dog" },
+  { is: "egg", gender: "n", en: "egg" },
 
+  { is: "kaka", gender: "f", en: "cake" },
 
-{ is: "kaka", gender: "f", en: "cake" },
+  { is: "te", gender: "n", en: "tea" },
+  { is: "kaffi", gender: "n", en: "coffee" },
+  { is: "safi", gender: "m", en: "juice" },
+  { is: "pitsa", gender: "f", en: "pizza" },
+  { is: "hamborgari", gender: "m", en: "hamburger" },
+  { is: "kjúklingur", gender: "m", en: "chicken" },
+  { is: "súkkulaði", gender: "n", en: "chocolate" },
 
-{ is: "te", gender: "n", en: "tea" },
-{ is: "kaffi", gender: "n", en: "coffee" },
-{ is: "safi", gender: "m", en: "juice" },
-{ is: "pitsa", gender: "f", en: "pizza" },
-{ is: "hamborgari", gender: "m", en: "hamburger" },
-{ is: "kjúklingur", gender: "m", en: "chicken" },
-{ is: "súkkulaði", gender: "n", en: "chocolate" },
+  { is: "skyrta", gender: "f", en: "shirt" },
+  { is: "kjóll", gender: "m", en: "dress" },
+  { is: "peysa", gender: "f", en: "sweater" },
+  { is: "úlpa", gender: "f", en: "coat" },
+  { is: "sokkur", gender: "m", en: "sock" },
+  { is: "húfa", gender: "f", en: "hat" },
+  { is: "hanski", gender: "m", en: "glove" },
+  { is: "skór", gender: "m", en: "shoe" },
+  { is: "belti", gender: "n", en: "belt" },
+  { is: "trefill", gender: "m", en: "scarf" },
+  { is: "pils", gender: "n", en: "skirt" },
+  { is: "bolur", gender: "m", en: "t-shirt" },
+  { is: "jakki", gender: "m", en: "jacket" },
+  { is: "bindi", gender: "n", en: "tie" },
+  { is: "regnkápa", gender: "f", en: "raincoat" },
 
-{ is: "skyrta", gender: "f", en: "shirt" },
-{ is: "kjóll", gender: "m", en: "dress" },
-{ is: "peysa", gender: "f", en: "sweater" },
-{ is: "úlpa", gender: "f", en: "coat" },
-{ is: "sokkur", gender: "m", en: "sock" },
-{ is: "húfa", gender: "f", en: "hat" },
-{ is: "hanski", gender: "m", en: "glove" },
-{ is: "skór", gender: "m", en: "shoe" },
-{ is: "belti", gender: "n", en: "belt" },
-{ is: "trefill", gender: "m", en: "scarf" },
-{ is: "pils", gender: "n", en: "skirt" },
-{ is: "bolur", gender: "m", en: "t-shirt" },
-{ is: "jakki", gender: "m", en: "jacket" },
-{ is: "bindi", gender: "n", en: "tie" },
-{ is: "regnkápa", gender: "f", en: "raincoat" },
-
-{ is: "bær", gender: "m", en: "town" },
-{ is: "þorp", gender: "n", en: "village" },
-{ is: "bíó", gender: "n", en: "cinema" },
-{ is: "veitingastaður", gender: "m", en: "restaurant" },
-{ is: "búð", gender: "f", en: "shop" },
-{ is: "banki", gender: "m", en: "bank" },
-{ is: "skóli", gender: "m", en: "school" },
-{ is: "lögreglustöð", gender: "f", en: "police station" },
-{ is: "sjúkrahús", gender: "n", en: "hospital" },
-{ is: "apótek", gender: "n", en: "pharmacy" },
-{ is: "kirkja", gender: "f", en: "church" },
-{ is: "moska", gender: "f", en: "mosque" },
-{ is: "flugvöllur", gender: "m", en: "airport" },
-{ is: "höfn", gender: "f", en: "harbor" },
-{ is: "bókasafn", gender: "n", en: "library" },
-{ is: "sundlaug", gender: "f", en: "swimming pool" },
-{ is: "garður", gender: "m", en: "park" },
-{ is: "leikvöllur", gender: "m", en: "playground" },
-{ is: "strönd", gender: "f", en: "beach" },
-{ is: "háskóli", gender: "m", en: "university" }
+  { is: "bær", gender: "m", en: "town" },
+  { is: "þorp", gender: "n", en: "village" },
+  { is: "bíó", gender: "n", en: "cinema" },
+  { is: "veitingastaður", gender: "m", en: "restaurant" },
+  { is: "búð", gender: "f", en: "shop" },
+  { is: "banki", gender: "m", en: "bank" },
+  { is: "skóli", gender: "m", en: "school" },
+  { is: "lögreglustöð", gender: "f", en: "police station" },
+  { is: "sjúkrahús", gender: "n", en: "hospital" },
+  { is: "apótek", gender: "n", en: "pharmacy" },
+  { is: "kirkja", gender: "f", en: "church" },
+  { is: "moska", gender: "f", en: "mosque" },
+  { is: "flugvöllur", gender: "m", en: "airport" },
+  { is: "höfn", gender: "f", en: "harbor" },
+  { is: "bókasafn", gender: "n", en: "library" },
+  { is: "sundlaug", gender: "f", en: "swimming pool" },
+  { is: "garður", gender: "m", en: "park" },
+  { is: "leikvöllur", gender: "m", en: "playground" },
+  { is: "strönd", gender: "f", en: "beach" },
+  { is: "háskóli", gender: "m", en: "university" }
 ];
 
 function shuffle(arr) {
@@ -295,7 +301,6 @@ function isGroup2(word) {
 
 function suffix(word, g) {
   const g2 = isGroup2(word);
-
   if (g === "m") return g2 ? "-nn" : "-inn";
   if (g === "f") return g2 ? "-n" : "-in";
   if (g === "n") return g2 ? "-ð" : "-ið";
