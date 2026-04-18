@@ -209,8 +209,7 @@ function render(q) {
     (${displayWord})
   `;
   resetInput();
-  document.getElementById("answer").addEventListener("keydown", e => { if (e.key === "Enter") checkAnswer(); });
-}
+document.getElementById("answer").addEventListener("keydown", e => { if (e.key === "Enter") { if (document.getElementById("answer").classList.contains("correct") || document.getElementById("answer").classList.contains("revealed") || document.getElementById("answer").classList.contains("wrong")) nextQuestion(); else checkAnswer(); } });}
 
 function nextQuestion() {
   if (index < history.length - 1) {
