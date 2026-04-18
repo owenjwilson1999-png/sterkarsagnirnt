@@ -209,6 +209,7 @@ function render(q) {
     (${displayWord})
   `;
   resetInput();
+  document.getElementById("answer").addEventListener("keydown", e => { if (e.key === "Enter") checkAnswer(); });
 }
 
 function nextQuestion() {
@@ -243,7 +244,7 @@ function checkAnswer() {
   const input = document.getElementById("answer");
   const val = input.value.trim();
   input.classList.remove("correct", "wrong", "revealed");
-  if (val === getCorrectAnswer()) {
+if (val.toLowerCase() === getCorrectAnswer().toLowerCase()) {
     input.classList.add("correct");
   } else {
     input.classList.add("wrong");
