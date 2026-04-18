@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+<meta charset="UTF-8" />
+<title>Íslensk föll æfing</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    text-align: center;
+  }
+
+  #sentence {
+    font-size: 22px;
+    margin-bottom: 25px;
+    line-height: 2;
+  }
+
+  input {
+    font-size: 20px;
+    padding: 4px 8px;
+    width: 180px;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    vertical-align: middle;
+  }
+
+  .correct { border-color: green; background: #d4ffd4; }
+  .wrong { border-color: red; background: #ffd4d4; }
+  .revealed { border-color: dodgerblue; background: #d4e6ff; }
+
+  button {
+    margin: 10px 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+#modeSelector {
+  margin: 15px 0;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#modeSelector span {
+  padding: 4px 8px;
+}
+
+#modeSelector span.active {
+  text-decoration: underline;
+  font-weight: bold;
+}
+button, .home-btn {
+  padding: 12px 20px;
+  min-height: 44px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.home-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f9f9f9;
+  box-sizing: border-box;
+}
+
+.home-btn:hover {
+  background-color: #f0f0f0;
+}
+</style>
+</head>
+
+<body>
+<a href="https://owenjwilson.github.io/aefingar/home.html" class="home-btn">
+  ← Heim
+</a>
+
+<h2>Hreyfing eða kyrrstaða?</h2>
+
+<div id="sentence"></div>
+
+<div>
+  <button onclick="checkAnswer()">Athuga svar</button>
+  <button onclick="revealAnswer()">Sýna svar</button>
+</div>
+<div id="modeSelector">
+  <span onclick="setMode('article')" id="mode-article">MEÐ GREINI</span>
+  |
+  <span onclick="setMode('none')" id="mode-none">ÁN GREINIS</span>
+  |
+  <span onclick="setMode('both')" id="mode-both">BÆÐI</span>
+</div>
+<div>
+  <button onclick="prevQuestion()">⬅ Fyrri</button>
+  <button onclick="nextQuestion()">Næsta ➡</button>
+</div>
+
+<script>
+
+const places = [
+  { base:"bíó", nomArt:"bíóið", accArt:"bíóið", accNo:"bíó", datArt:"bíóinu", datNo:"bíói", type:"í" },
+  { base:"veitingastaður", nomArt:"veitingastaðurinn", accArt:"veitingastaðinn", accNo:"veitingastað", datArt:"veitingastaðnum", datNo:"veitingastað", type:"á" },
+  { base:"búð", nomArt:"búðin", accArt:"búðina", accNo:"búð", datArt:"búðinni", datNo:"búð", type:"í" },
+  { base:"banki", nomArt:"bankinn", accArt:"bankann", accNo:"banka", datArt:"bankanum", datNo:"banka", type:"í" },
+  { base:"skóli", nomArt:"skólinn", accArt:"skólann", accNo:"skóla", datArt:"skólanum", datNo:"skóla", type:"í" },
+  { base:"lögreglustöð", nomArt:"lögreglustöðin", accArt:"lögreglustöðina", accNo:"lögreglustöð", datArt:"lögreglustöðinni", datNo:"lögreglustöð", type:"á" },
+  { base:"sjúkrahús", nomArt:"sjúkrahúsið", accArt:"sjúkrahúsið", accNo:"sjúkrahús", datArt:"sjúkrahúsinu", datNo:"sjúkrahúsi", type:"á" },
+  { base:"spítali", nomArt:"spítalinn", accArt:"spítalann", accNo:"spítala", datArt:"spítalanum", datNo:"spítala", type:"á" },
+  { base:"apótek", nomArt:"apótekið", accArt:"apótekið", accNo:"apótek", datArt:"apótekinu", datNo:"apóteki", type:"í" },
+  { base:"kirkja", nomArt:"kirkjan", accArt:"kirkjuna", accNo:"kirkju", datArt:"kirkjunni", datNo:"kirkju", type:"í" },
+  { base:"moska", nomArt:"moskan", accArt:"moskuna", accNo:"mosku", datArt:"moskunni", datNo:"mosku", type:"í" },
+  { base:"bókasafn", nomArt:"bókasafnið", accArt:"bókasafnið", accNo:"bókasafn", datArt:"bókasafninu", datNo:"bókasafni", type:"á" },
+  { base:"sundlaug", nomArt:"sundlaugin", accArt:"sundlaugina", accNo:"sundlaug", datArt:"sundlauginni", datNo:"sundlaug", type:"í" },
+  { base:"háskóli", nomArt:"háskólinn", accArt:"háskólann", accNo:"háskóla", datArt:"háskólanum", datNo:"háskóla", type:"í" },
+  { base:"skemmtistaður", nomArt:"skemmtistaðurinn", accArt:"skemmtistaðinn", accNo:"skemmtistað", datArt:"skemmtistaðnum", datNo:"skemmtistað", type:"á" },
+  { base:"listasafn", nomArt:"listasafnið", accArt:"listasafnið", accNo:"listasafn", datArt:"listasafninu", datNo:"listasafni", type:"á" },
+  { base:"hótel", nomArt:"hótelið", accArt:"hótelið", accNo:"hótel", datArt:"hótelinu", datNo:"hóteli", type:"á" },
+  { base:"kaffihús", nomArt:"kaffihúsið", accArt:"kaffihúsið", accNo:"kaffihús", datArt:"kaffihúsinu", datNo:"kaffihúsi", type:"á" },
+  { base:"pósthús", nomArt:"pósthúsið", accArt:"pósthúsið", accNo:"pósthús", datArt:"pósthúsinu", datNo:"pósthúsi", type:"á" },
+  { base:"bensínstöð", nomArt:"bensínstöðin", accArt:"bensínstöðin", accNo:"bensínstöð", datArt:"bensínstöðinni", datNo:"bensínstöð", type:"á" }
+];
+
+// ---------------- SENTENCES ----------------
+
+const accSentences = [
+  "Ég fer", "Þú ferð", "Hann fer", "Hún fer", "Hán fer",
+  "Við förum", "Þið farið", "Þeir fara", "Þær fara", "Þau fara",
+
+  "Ég fór", "Þú fórst", "Hann fór", "Hún fór", "Hán fór",
+  "Við fórum", "Þið fóruð", "Þeir fóru", "Þær fóru", "Þau fóru",
+
+  "Ég kem", "Þú kemur", "Hann kemur", "Hún kemur", "Hán kemur",
+  "Við komum", "Þið komið", "Þeir koma", "Þær koma", "Þau koma",
+
+  "Ég labba", "Þú labbar", "Hann labbar", "Hún labbar", "Hán labbar",
+  "Við labbum", "Þið labbið", "Þeir labba", "Þær labba", "Þau labba",
+
+  "Ég hleyp", "Þú hleypur", "Hann hleypur", "Hún hleypur", "Hán hleypur",
+  "Við hlaupum", "Þið hlaupið", "Þeir hlaupa", "Þær hlaupa", "Þau hlaupa",
+
+  "Ég keyri", "Þú keyrir", "Hann keyrir", "Hún keyrir", "Hán keyrir",
+  "Við keyrum", "Þið keyríð", "Þeir keyra", "Þær keyra", "Þau keyra"
+];
+
+const datSentences = [
+  "Ég er", "Þú ert", "Hann er", "Hún er", "Hán er",
+  "Við erum", "Þið eruð", "Þeir eru", "Þær eru", "Þau eru",
+
+  "Ég var", "Þú varst", "Hann var", "Hún var", "Hán var",
+  "Við vorum", "Þið voruð", "Þeir voru", "Þær voru", "Þau voru",
+
+  "Ég vinn", "Þú vinnur", "Hann vinnur", "Hún vinnur", "Hán vinnur",
+  "Við vinnum", "Þið vinnið", "Þeir vinna", "Þær vinna", "Þau vinna",
+
+  "Ég sef", "Þú sefur", "Hann sefur", "Hún sefur", "Hán sefur",
+  "Við sofum", "Þið sofið", "Þeir sofa", "Þær sofa", "Þau sofa",
+
+  "Ég bý", "Þú býrð", "Hann býr", "Hún býr", "Hán býr",
+  "Við búum", "Þið búið", "Þeir búa", "Þær búa", "Þau búa",
+
+  "Ég drekk kaffi", "Þú drekkur kaffi", "Hann drekkur kaffi", "Hún drekkur kaffi", "Hán drekkur kaffi",
+  "Við drekkum kaffi", "Þið drekkið kaffi", "Þeir drekka kaffi", "Þær drekka kaffi", "Þau drekka kaffi"
+];
+
+// ---------------- LOGIC ----------------
+
+let history = [];
+let index = -1;
+let current = {};
+
+// 🎛 ARTICLE MODE CONTROL
+// "both" | "article" | "noarticle"
+let articleMode = "both";
+setMode("both");
+
+function random(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateQuestion() {
+  const place = random(places);
+  const isAcc = Math.random() < 0.5;
+  const sentence = isAcc ? random(accSentences) : random(datSentences);
+  let showArticle;
+if (articleMode === "both") {
+  showArticle = Math.random() < 0.5;
+} else if (articleMode === "article") {
+  showArticle = true;
+} else {
+  showArticle = false;
+}
+
+  return { place, case: isAcc ? "acc" : "dat", sentence, showArticle };
+}
+
+function render(q) {
+  current = q;
+
+  const prep = q.place.type;
+  const displayWord = q.showArticle ? q.place.nomArt : q.place.base;
+
+  document.getElementById("sentence").innerHTML = `
+    ${q.sentence} ${prep}
+   <input id="answer" />
+    (${displayWord})
+  `;
+
+  resetInput();
+}
+
+function nextQuestion() {
+  if (index < history.length - 1) {
+    index++;
+    render(history[index]);
+    return;
+  }
+
+  const q = generateQuestion();
+  history.push(q);
+  index++;
+  render(q);
+}
+
+function prevQuestion() {
+  if (index > 0) {
+    index--;
+    render(history[index]);
+  }
+}
+
+function getCorrectAnswer() {
+  const p = current.place;
+
+  if (current.case === "acc") {
+    return current.showArticle ? p.accArt : p.accNo;
+  } else {
+    return current.showArticle ? p.datArt : p.datNo;
+  }
+}
+
+function checkAnswer() {
+  const input = document.getElementById("answer");
+  const val = input.value.trim();
+
+  input.classList.remove("correct", "wrong", "revealed");
+
+  if (val === getCorrectAnswer()) {
+    input.classList.add("correct");
+  } else {
+    input.classList.add("wrong");
+  }
+}
+
+function revealAnswer() {
+  const input = document.getElementById("answer");
+  input.value = getCorrectAnswer();
+  input.classList.remove("correct", "wrong");
+  input.classList.add("revealed");
+}
+
+function resetInput() {
+  const input = document.getElementById("answer");
+  input.value = "";
+  input.classList.remove("correct", "wrong", "revealed");
+}
+
+
+
+nextQuestion();
+function setMode(mode) {
+  articleMode = mode;
+
+  document.getElementById("mode-article").classList.remove("active");
+  document.getElementById("mode-none").classList.remove("active");
+  document.getElementById("mode-both").classList.remove("active");
+
+  if (mode === "article") {
+    document.getElementById("mode-article").classList.add("active");
+  } else if (mode === "none") {
+    document.getElementById("mode-none").classList.add("active");
+  } else {
+    document.getElementById("mode-both").classList.add("active");
+  }
+}
+</script>
+
+</body>
+</html>
